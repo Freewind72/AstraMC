@@ -32,8 +32,7 @@ if (isset($_POST['action'])) {
                 $stmt->bindValue(':sort_order', $sortOrder, SQLITE3_INTEGER);
                 
                 if ($stmt->execute()) {
-                    header("Location: gallery.php?message=" . urlencode('展览图片已成功添加！'));
-                    exit();
+                    $message = '展览图片已成功添加！';
                 } else {
                     $message = '添加展览图片失败，请重试。';
                 }
@@ -41,6 +40,13 @@ if (isset($_POST['action'])) {
                 $message = '添加失败：' . $e->getMessage();
             }
         }
+        
+        // 添加JavaScript以滚动到精选展览管理部分
+        echo '<script>
+            document.addEventListener("DOMContentLoaded", function() {
+                window.location.hash = "gallery-form";
+            });
+        </script>';
     } elseif ($_POST['action'] === 'update_image') {
         // 更新展览图片
         $id = intval($_POST['image_id']);
@@ -59,8 +65,7 @@ if (isset($_POST['action'])) {
                 $stmt->bindValue(':sort_order', $sortOrder, SQLITE3_INTEGER);
                 
                 if ($stmt->execute()) {
-                    header("Location: gallery.php?message=" . urlencode('展览图片已成功更新！'));
-                    exit();
+                    $message = '展览图片已成功更新！';
                 } else {
                     $message = '更新展览图片失败，请重试。';
                 }
@@ -68,6 +73,13 @@ if (isset($_POST['action'])) {
                 $message = '更新失败：' . $e->getMessage();
             }
         }
+        
+        // 添加JavaScript以滚动到精选展览管理部分
+        echo '<script>
+            document.addEventListener("DOMContentLoaded", function() {
+                window.location.hash = "gallery-form";
+            });
+        </script>';
     } elseif ($_POST['action'] === 'delete_image') {
         // 删除展览图片
         $id = intval($_POST['image_id']);
@@ -77,22 +89,33 @@ if (isset($_POST['action'])) {
             $stmt->bindValue(':id', $id, SQLITE3_INTEGER);
             
             if ($stmt->execute()) {
-                header("Location: gallery.php?message=" . urlencode('展览图片已成功删除！'));
-                exit();
+                $message = '展览图片已成功删除！';
             } else {
                 $message = '删除展览图片失败，请重试。';
             }
         } catch (Exception $e) {
             $message = '删除失败：' . $e->getMessage();
         }
+        
+        // 添加JavaScript以滚动到精选展览管理部分
+        echo '<script>
+            document.addEventListener("DOMContentLoaded", function() {
+                window.location.hash = "gallery-form";
+            });
+        </script>';
     }
 }
 ?>
 
-<div class="card">
+<div class="card" id="gallery-form">
     <h2 class="card-title">
         <i class="fas fa-images"></i> 精选展览管理
     </h2>
+    <?php if (isset($message)): ?>
+        <div class="message <?php echo strpos($message, '成功') !== false ? 'success' : 'error'; ?>">
+            <?php echo htmlspecialchars($message); ?>
+        </div>
+    <?php endif; ?>
     
     <!-- 添加展览图片表单 -->
     <form method="post" class="mb-4">
@@ -221,6 +244,16 @@ function deleteImage(imageId) {
         form.submit();
     }
 }
+
+// 页面加载后，如果有hash，则滚动到对应位置
+document.addEventListener('DOMContentLoaded', function() {
+    if (window.location.hash) {
+        var targetElement = document.querySelector(window.location.hash);
+        if (targetElement) {
+            targetElement.scrollIntoView();
+        }
+    }
+});
 </script>
 
 <?php

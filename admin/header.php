@@ -269,7 +269,14 @@ $csrfToken = $securityManager->generateCSRFToken();
 // 防止表单重复提交
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!isset($_POST['csrf_token']) || !$securityManager->validateCSRFToken($_POST['csrf_token'])) {
-        header('Location: index.php?message=' . urlencode('无效的请求令牌，请重试'));
+        // 使用JavaScript在当前页面显示错误，而不是跳转
+        echo '<script>
+            document.addEventListener("DOMContentLoaded", function() {
+                alert("无效的请求令牌，请重试");
+                window.location.hash = "";
+            });
+        </script>';
+        // 终止脚本执行，但不跳转
         exit();
     }
     
@@ -279,7 +286,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['last_request_fingerprint'] === $requestFingerprint &&
         isset($_SESSION['last_request_time']) && 
         (time() - $_SESSION['last_request_time']) < 5) { // 5秒内不允许重复提交
-        header('Location: ' . $_SERVER['PHP_SELF'] . '?message=' . urlencode('请勿重复提交表单'));
+        // 使用JavaScript在当前页面显示错误，而不是跳转
+        echo '<script>
+            document.addEventListener("DOMContentLoaded", function() {
+                alert("请勿重复提交表单");
+                if (window.location.hash) {
+                    window.location.hash = window.location.hash;
+                } else {
+                    window.location.hash = "";
+                }
+            });
+        </script>';
+        // 终止脚本执行，但不跳转
         exit();
     }
     
@@ -615,3 +633,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 nav.classList.toggle('active');
             });
         </script>
+</original_code>```
+
+```

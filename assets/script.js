@@ -29,10 +29,12 @@ window.addEventListener('load', restoreScrollPosition);
 window.addEventListener('beforeunload', saveScrollPosition);
 
 window.addEventListener('scroll', () => {
-    if (window.pageYOffset > 500) {
-        backToTopBtn.classList.add('show');
-    } else {
-        backToTopBtn.classList.remove('show');
+    if (backToTopBtn) { // 确保元素存在
+        if (window.pageYOffset > 500) {
+            backToTopBtn.classList.add('show');
+        } else {
+            backToTopBtn.classList.remove('show');
+        }
     }
     
     // 滚动时保存位置（可选，用于更实时的保存）
@@ -40,13 +42,15 @@ window.addEventListener('scroll', () => {
     window.scrollSaveTimer = setTimeout(saveScrollPosition, 100);
 });
 
-backToTopBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
+if (backToTopBtn) { // 只有当元素存在时才添加事件监听器
+    backToTopBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
     });
-});
+}
 
 // 平滑滚动导航
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -321,15 +325,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // 更多按钮动画效果
 const moreBtn = document.querySelector('.more-btn');
-moreBtn.addEventListener('mouseover', () => {
-    moreBtn.style.transform = 'translateY(-5px)';
-    moreBtn.style.boxShadow = '0 15px 25px rgba(255, 190, 80, 0.3)';
-});
+if (moreBtn) { // 只有当元素存在时才添加事件监听器
+    moreBtn.addEventListener('mouseover', () => {
+        moreBtn.style.transform = 'translateY(-5px)';
+        moreBtn.style.boxShadow = '0 15px 25px rgba(255, 190, 80, 0.3)';
+    });
 
-moreBtn.addEventListener('mouseleave', () => {
-    moreBtn.style.transform = 'translateY(0)';
-    moreBtn.style.boxShadow = 'none';
-});
+    moreBtn.addEventListener('mouseleave', () => {
+        moreBtn.style.transform = 'translateY(0)';
+        moreBtn.style.boxShadow = 'none';
+    });
+}
 
 // 滚动动画
 document.querySelectorAll('.fade-in').forEach(element => {

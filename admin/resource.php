@@ -43,8 +43,7 @@ if (isset($_POST['action'])) {
                 }
                 
                 if ($stmt->execute()) {
-                    header("Location: resource.php?message=" . urlencode('资源包设置已成功更新！'));
-                    exit();
+                    $message = '资源包设置已成功更新！';
                 } else {
                     $message = '更新失败，请重试。';
                 }
@@ -54,6 +53,13 @@ if (isset($_POST['action'])) {
         } else {
             $message = '请输入有效的资源包URL。';
         }
+        
+        // 添加JavaScript以滚动到资源包管理部分
+        echo '<script>
+            document.addEventListener("DOMContentLoaded", function() {
+                window.location.hash = "resource-form";
+            });
+        </script>';
     } elseif ($_POST['action'] === 'add_section') {
         // 添加资源下载简介或卡片
         $sectionType = trim($_POST['section_type']);
@@ -63,8 +69,6 @@ if (isset($_POST['action'])) {
         
         if (empty($title) || empty($description)) {
             $message = '标题和描述都不能为空。';
-            header("Location: resource.php?message=" . urlencode($message));
-            exit();
         } else {
             try {
                 $stmt = $db->prepare("INSERT INTO resource_sections (section_type, title, description, sort_order) VALUES (:section_type, :title, :description, :sort_order)");
@@ -74,19 +78,21 @@ if (isset($_POST['action'])) {
                 $stmt->bindValue(':sort_order', $sortOrder, SQLITE3_INTEGER);
                 
                 if ($stmt->execute()) {
-                    header("Location: resource.php?message=" . urlencode('资源下载内容已成功添加！'));
-                    exit();
+                    $message = '资源下载内容已成功添加！';
                 } else {
                     $message = '添加资源下载内容失败，请重试。';
-                    header("Location: resource.php?message=" . urlencode($message));
-                    exit();
                 }
             } catch (Exception $e) {
                 $message = '添加失败：' . $e->getMessage();
-                header("Location: resource.php?message=" . urlencode($message));
-                exit();
             }
         }
+        
+        // 添加JavaScript以滚动到资源下载管理部分
+        echo '<script>
+            document.addEventListener("DOMContentLoaded", function() {
+                window.location.hash = "resource-download-section";
+            });
+        </script>';
     } elseif ($_POST['action'] === 'update_section') {
         // 更新资源下载简介或卡片
         $id = intval($_POST['section_id']);
@@ -97,8 +103,6 @@ if (isset($_POST['action'])) {
         
         if (empty($title) || empty($description)) {
             $message = '标题和描述都不能为空。';
-            header("Location: resource.php?message=" . urlencode($message));
-            exit();
         } else {
             try {
                 $stmt = $db->prepare("UPDATE resource_sections SET section_type = :section_type, title = :title, description = :description, sort_order = :sort_order WHERE id = :id");
@@ -109,19 +113,21 @@ if (isset($_POST['action'])) {
                 $stmt->bindValue(':sort_order', $sortOrder, SQLITE3_INTEGER);
                 
                 if ($stmt->execute()) {
-                    header("Location: resource.php?message=" . urlencode('资源下载内容已成功更新！'));
-                    exit();
+                    $message = '资源下载内容已成功更新！';
                 } else {
                     $message = '更新资源下载内容失败，请重试。';
-                    header("Location: resource.php?message=" . urlencode($message));
-                    exit();
                 }
             } catch (Exception $e) {
                 $message = '更新失败：' . $e->getMessage();
-                header("Location: resource.php?message=" . urlencode($message));
-                exit();
             }
         }
+        
+        // 添加JavaScript以滚动到资源下载管理部分
+        echo '<script>
+            document.addEventListener("DOMContentLoaded", function() {
+                window.location.hash = "resource-download-section";
+            });
+        </script>';
     } elseif ($_POST['action'] === 'delete_section') {
         // 删除资源下载简介或卡片
         $id = intval($_POST['section_id']);
@@ -131,26 +137,33 @@ if (isset($_POST['action'])) {
             $stmt->bindValue(':id', $id, SQLITE3_INTEGER);
             
             if ($stmt->execute()) {
-                header("Location: resource.php?message=" . urlencode('资源下载内容已成功删除！'));
-                exit();
+                $message = '资源下载内容已成功删除！';
             } else {
                 $message = '删除资源下载内容失败，请重试。';
-                header("Location: resource.php?message=" . urlencode($message));
-                exit();
             }
         } catch (Exception $e) {
             $message = '删除失败：' . $e->getMessage();
-            header("Location: resource.php?message=" . urlencode($message));
-            exit();
         }
+        
+        // 添加JavaScript以滚动到资源下载管理部分
+        echo '<script>
+            document.addEventListener("DOMContentLoaded", function() {
+                window.location.hash = "resource-download-section";
+            });
+        </script>';
     }
 }
 ?>
 
-<div class="card">
+<div class="card" id="resource-form">
     <h2 class="card-title">
         <i class="fas fa-file-archive"></i> 资源包管理
     </h2>
+    <?php if (isset($message)): ?>
+        <div class="message <?php echo strpos($message, '成功') !== false ? 'success' : 'error'; ?>">
+            <?php echo htmlspecialchars($message); ?>
+        </div>
+    <?php endif; ?>
     <form method="post">
         <input type="hidden" name="action" value="update_resource">
         <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrfToken); ?>">
@@ -190,7 +203,7 @@ if (isset($_POST['action'])) {
     </div>
 </div>
 
-<div class="card">
+<div class="card" id="resource-download-section">
     <h2 class="card-title">
         <i class="fas fa-file-download"></i> 资源下载管理
     </h2>
@@ -252,6 +265,7 @@ if (isset($_POST['action'])) {
             <form method="post">
                 <input type="hidden" name="action" value="update_section">
                 <input type="hidden" name="section_id" value="<?php echo $section['id']; ?>">
+                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrfToken); ?>">
                 <div class="form-group">
                     <label class="form-label">内容类型</label>
                     <select name="section_type" class="form-input" required>
@@ -329,6 +343,16 @@ function deleteSection(sectionId) {
         form.submit();
     }
 }
+
+// 页面加载后，如果有hash，则滚动到对应位置
+document.addEventListener('DOMContentLoaded', function() {
+    if (window.location.hash) {
+        var targetElement = document.querySelector(window.location.hash);
+        if (targetElement) {
+            targetElement.scrollIntoView();
+        }
+    }
+});
 </script>
 
 <?php

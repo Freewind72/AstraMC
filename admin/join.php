@@ -31,8 +31,6 @@ if (isset($_POST['action'])) {
         
         if (empty($title) || empty($description) || empty($serverAddress) || empty($serverVersion) || empty($qqGroup)) {
             $message = '所有字段都不能为空。';
-            header("Location: join.php?message=" . urlencode($message));
-            exit();
         } else {
             try {
                 // 检查是否已存在记录
@@ -58,26 +56,26 @@ if (isset($_POST['action'])) {
                 }
                 
                 if ($stmt->execute()) {
-                    header("Location: join.php?message=" . urlencode('加入我们设置已成功更新！'));
-                    exit();
+                    $message = '加入我们设置已成功更新！';
                 } else {
                     $message = '更新失败，请重试。';
-                    header("Location: join.php?message=" . urlencode($message));
-                    exit();
                 }
             } catch (Exception $e) {
                 $message = '更新失败：' . $e->getMessage();
-                header("Location: join.php?message=" . urlencode($message));
-                exit();
             }
         }
+        
+        // 添加JavaScript以滚动到加入我们管理部分
+        echo '<script>
+            document.addEventListener("DOMContentLoaded", function() {
+                window.location.hash = "join-form";
+            });
+        </script>';
     } elseif ($_POST['action'] === 'update_qr') {
         $qrUrl = trim($_POST['qr_url']);
         
         if (empty($qrUrl)) {
             $message = '二维码链接不能为空。';
-            header("Location: join.php?message=" . urlencode($message));
-            exit();
         } else {
             try {
                 // 检查是否已存在记录
@@ -95,27 +93,34 @@ if (isset($_POST['action'])) {
                 }
                 
                 if ($stmt->execute()) {
-                    header("Location: join.php?message=" . urlencode('二维码链接已成功更新！'));
-                    exit();
+                    $message = '二维码链接已成功更新！';
                 } else {
                     $message = '更新失败，请重试。';
-                    header("Location: join.php?message=" . urlencode($message));
-                    exit();
                 }
             } catch (Exception $e) {
                 $message = '更新失败：' . $e->getMessage();
-                header("Location: join.php?message=" . urlencode($message));
-                exit();
             }
         }
+        
+        // 添加JavaScript以滚动到加入我们管理部分
+        echo '<script>
+            document.addEventListener("DOMContentLoaded", function() {
+                window.location.hash = "join-form";
+            });
+        </script>';
     }
 }
 ?>
 
-<div class="card">
+<div class="card" id="join-form">
     <h2 class="card-title">
         <i class="fas fa-users"></i> 加入我们管理
     </h2>
+    <?php if (isset($message)): ?>
+        <div class="message <?php echo strpos($message, '成功') !== false ? 'success' : 'error'; ?>">
+            <?php echo htmlspecialchars($message); ?>
+        </div>
+    <?php endif; ?>
     <form method="post">
         <input type="hidden" name="action" value="update_join">
         <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrfToken); ?>">

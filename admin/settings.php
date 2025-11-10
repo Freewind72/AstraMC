@@ -12,16 +12,10 @@ if (isset($_POST['action'])) {
         // 验证输入
         if (empty($currentPassword) || empty($newPassword) || empty($confirmPassword)) {
             $message = '所有字段都是必填的。';
-            header("Location: settings.php?message=" . urlencode($message));
-            exit();
         } elseif ($newPassword !== $confirmPassword) {
             $message = '新密码和确认密码不匹配。';
-            header("Location: settings.php?message=" . urlencode($message));
-            exit();
         } elseif (strlen($newPassword) < 6) {
             $message = '新密码至少需要6个字符。';
-            header("Location: settings.php?message=" . urlencode($message));
-            exit();
         } else {
             try {
                 // 验证当前密码
@@ -57,33 +51,30 @@ if (isset($_POST['action'])) {
                             exit();
                         } else {
                             $message = '更改密码时出错，请重试。';
-                            header("Location: settings.php?message=" . urlencode($message));
-                            exit();
                         }
                     } else {
                         $message = '当前密码不正确。';
-                        header("Location: settings.php?message=" . urlencode($message));
-                        exit();
                     }
                 } else {
                     $message = '当前密码不正确。';
-                    header("Location: settings.php?message=" . urlencode($message));
-                    exit();
                 }
             } catch (Exception $e) {
                 $message = '更改密码时出错：' . $e->getMessage();
-                header("Location: settings.php?message=" . urlencode($message));
-                exit();
             }
         }
+        
+        // 添加JavaScript以滚动到系统设置部分
+        echo '<script>
+            document.addEventListener("DOMContentLoaded", function() {
+                window.location.hash = "settings-form";
+            });
+        </script>';
     } elseif ($_POST['action'] === 'change_username') {
         $newUsername = trim($_POST['new_username'] ?? '');
         
         // 验证输入
         if (empty($newUsername)) {
             $message = '用户名不能为空。';
-            header("Location: settings.php?message=" . urlencode($message));
-            exit();
         } else {
             try {
                 // 检查新用户名是否已存在
@@ -95,8 +86,6 @@ if (isset($_POST['action'])) {
                 
                 if ($existingUser) {
                     $message = '该用户名已被使用，请选择其他用户名。';
-                    header("Location: settings.php?message=" . urlencode($message));
-                    exit();
                 } else {
                     // 更新用户名
                     $updateStmt = $db->prepare("UPDATE admins SET username = :username WHERE username = :current_username");
@@ -106,28 +95,35 @@ if (isset($_POST['action'])) {
                     if ($updateStmt->execute()) {
                         // 更新会话中的用户名
                         $_SESSION['username'] = $newUsername;
-                        header("Location: settings.php?message=" . urlencode('用户名已更改成功！'));
-                        exit();
+                        $message = '用户名已更改成功！';
                     } else {
                         $message = '更改用户名时出错，请重试。';
-                        header("Location: settings.php?message=" . urlencode($message));
-                        exit();
                     }
                 }
             } catch (Exception $e) {
                 $message = '更改用户名时出错：' . $e->getMessage();
-                header("Location: settings.php?message=" . urlencode($message));
-                exit();
             }
         }
+        
+        // 添加JavaScript以滚动到系统设置部分
+        echo '<script>
+            document.addEventListener("DOMContentLoaded", function() {
+                window.location.hash = "settings-form";
+            });
+        </script>';
     }
 }
 ?>
 
-<div class="card">
+<div class="card" id="settings-form">
     <h2 class="card-title">
         <i class="fas fa-user-edit"></i> 修改用户名
     </h2>
+    <?php if (isset($message)): ?>
+        <div class="message <?php echo strpos($message, '成功') !== false || strpos($message, '密码已更改') !== false ? 'success' : 'error'; ?>">
+            <?php echo htmlspecialchars($message); ?>
+        </div>
+    <?php endif; ?>
     <form method="post">
         <input type="hidden" name="action" value="change_username">
         <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrfToken); ?>">

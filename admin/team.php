@@ -36,8 +36,7 @@ if (isset($_POST['action'])) {
                 $stmt->bindValue(':sort_order', $sortOrder, SQLITE3_INTEGER);
                 
                 if ($stmt->execute()) {
-                    header("Location: team.php?message=" . urlencode('团队成员已成功添加！'));
-                    exit();
+                    $message = '团队成员已成功添加！';
                 } else {
                     $message = '添加团队成员失败，请重试。';
                 }
@@ -45,6 +44,13 @@ if (isset($_POST['action'])) {
                 $message = '添加失败：' . $e->getMessage();
             }
         }
+        
+        // 添加JavaScript以滚动到管理团队管理部分
+        echo '<script>
+            document.addEventListener("DOMContentLoaded", function() {
+                window.location.hash = "team-form";
+            });
+        </script>';
     } elseif ($_POST['action'] === 'update_member') {
         // 更新团队成员
         $id = intval($_POST['member_id']);
@@ -67,8 +73,7 @@ if (isset($_POST['action'])) {
                 $stmt->bindValue(':sort_order', $sortOrder, SQLITE3_INTEGER);
                 
                 if ($stmt->execute()) {
-                    header("Location: team.php?message=" . urlencode('团队成员已成功更新！'));
-                    exit();
+                    $message = '团队成员已成功更新！';
                 } else {
                     $message = '更新团队成员失败，请重试。';
                 }
@@ -76,6 +81,13 @@ if (isset($_POST['action'])) {
                 $message = '更新失败：' . $e->getMessage();
             }
         }
+        
+        // 添加JavaScript以滚动到管理团队管理部分
+        echo '<script>
+            document.addEventListener("DOMContentLoaded", function() {
+                window.location.hash = "team-form";
+            });
+        </script>';
     } elseif ($_POST['action'] === 'delete_member') {
         // 删除团队成员
         $id = intval($_POST['member_id']);
@@ -85,22 +97,33 @@ if (isset($_POST['action'])) {
             $stmt->bindValue(':id', $id, SQLITE3_INTEGER);
             
             if ($stmt->execute()) {
-                header("Location: team.php?message=" . urlencode('团队成员已成功删除！'));
-                exit();
+                $message = '团队成员已成功删除！';
             } else {
                 $message = '删除团队成员失败，请重试。';
             }
         } catch (Exception $e) {
             $message = '删除失败：' . $e->getMessage();
         }
+        
+        // 添加JavaScript以滚动到管理团队管理部分
+        echo '<script>
+            document.addEventListener("DOMContentLoaded", function() {
+                window.location.hash = "team-form";
+            });
+        </script>';
     }
 }
 ?>
 
-<div class="card">
+<div class="card" id="team-form">
     <h2 class="card-title">
         <i class="fas fa-users"></i> 管理团队管理
     </h2>
+    <?php if (isset($message)): ?>
+        <div class="message <?php echo strpos($message, '成功') !== false ? 'success' : 'error'; ?>">
+            <?php echo htmlspecialchars($message); ?>
+        </div>
+    <?php endif; ?>
     
     <!-- 添加团队成员表单 -->
     <form method="post" class="mb-4">
@@ -268,6 +291,16 @@ function deleteMember(memberId) {
         form.submit();
     }
 }
+
+// 页面加载后，如果有hash，则滚动到对应位置
+document.addEventListener('DOMContentLoaded', function() {
+    if (window.location.hash) {
+        var targetElement = document.querySelector(window.location.hash);
+        if (targetElement) {
+            targetElement.scrollIntoView();
+        }
+    }
+});
 </script>
 
 <?php

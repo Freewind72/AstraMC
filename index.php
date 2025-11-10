@@ -199,44 +199,8 @@ $qrUrl = $dbVars['qrUrl'];
         <h2 class="fade-in">服务器特点</h2>
         <p class="fade-in delay-1">精心设计的游戏体验，为玩家提供多种玩法，丰富的游戏内容</p>
     </div>
-    <div class="features-content">
-        <?php
-        // 获取服务器特点列表用于前端显示
-        $dbVars = include 'install/db_init.php';
-        $db = new SQLite3('sql/settings.db');
-        $featuresResult = $db->query("SELECT * FROM server_features ORDER BY sort_order ASC, id ASC");
-        $features = [];
-        while ($row = $featuresResult->fetchArray(SQLITE3_ASSOC)) {
-            $features[] = $row;
-        }
-        $db->close();
-        
-        // 显示特征卡片
-        foreach ($features as $index => $feature):
-        ?>
-        <div class="feature-card glass fade-in <?php echo 'delay-' . (($index % 4) + 1); ?>">
-            <div class="feature-icon">
-                <?php if (preg_match('/^<svg/', $feature['icon_code'])): ?>
-                    <div class="svg-icon-wrapper">
-                        <?php 
-                        // 为SVG图标添加固定大小的样式
-                        $svgCode = $feature['icon_code'];
-                        if (strpos($svgCode, 'style=') === false) {
-                            $svgCode = str_replace('<svg', '<svg style="width:100%;height:100%"', $svgCode);
-                        }
-                        echo $svgCode;
-                        ?>
-                    </div>
-                <?php elseif (strpos($feature['icon_code'], 'icon-') === 0): ?>
-                    <i class="iconfont <?php echo htmlspecialchars($feature['icon_code']); ?>"></i>
-                <?php else: ?>
-                    <i class="<?php echo htmlspecialchars($feature['icon_code']); ?>"></i>
-                <?php endif; ?>
-            </div>
-            <h3><?php echo htmlspecialchars($feature['title']); ?></h3>
-            <p><?php echo htmlspecialchars($feature['description']); ?></p>
-        </div>
-        <?php endforeach; ?>
+    <div class="features-content" id="features-container">
+        <!-- 动态内容将通过JavaScript加载 -->
     </div>
 </section>
 
@@ -266,28 +230,11 @@ $qrUrl = $dbVars['qrUrl'];
         <p class="fade-in delay-1">欣赏玩家在服务器中创造的惊人建筑和精彩瞬间</p>
     </div>
     <div class="gallery-content">
-        <div class="gallery-grid">
-            <?php
-            // 获取展览图片列表用于前端显示
-            $dbVars = include 'install/db_init.php';
-            $db = new SQLite3('sql/settings.db');
-            $imagesResult = $db->query("SELECT * FROM gallery_images ORDER BY sort_order ASC, id ASC");
-            $images = [];
-            while ($row = $imagesResult->fetchArray(SQLITE3_ASSOC)) {
-                $images[] = $row;
-            }
-            $db->close();
-            
-            // 显示展览图片
-            foreach ($images as $index => $image):
-            ?>
-            <div class="gallery-item glass fade-in <?php echo 'delay-' . ((($index + 3) % 4) + 1); ?>">
-                <img src="<?php echo htmlspecialchars($image['image_url']); ?>" alt="<?php echo htmlspecialchars($image['alt_text']); ?>">
-            </div>
-            <?php endforeach; ?>
+        <div class="gallery-grid" id="gallery-container">
+            <!-- 动态内容将通过JavaScript加载 -->
         </div>
-        <div class="gallery-more">
-            <a href="https://picui.cn/share/xvspdy5oMpGZ" target="_blank" class="more-btn fade-in delay-4">浏览更多精彩瞬间 <i class="fas fa-angle-right"></i></a>
+        <div class="gallery-more" id="gallery-more-container">
+            <!-- 动态内容将通过JavaScript加载 -->
         </div>
     </div>
 </section>
@@ -298,63 +245,19 @@ $qrUrl = $dbVars['qrUrl'];
         <h2 class="fade-in">管理团队</h2>
         <p class="fade-in delay-1">专业的管理团队确保服务器的流畅运行和公平游戏环境</p>
     </div>
-    <div class="team-members">
-        <?php
-        // 获取管理团队成员列表用于前端显示
-        $dbVars = include 'install/db_init.php';
-        $db = new SQLite3('sql/settings.db');
-        $membersResult = $db->query("SELECT * FROM team_members ORDER BY sort_order ASC, id ASC");
-        $members = [];
-        while ($row = $membersResult->fetchArray(SQLITE3_ASSOC)) {
-            $members[] = $row;
-        }
-        $db->close();
-        
-        // 显示团队成员
-        foreach ($members as $index => $member):
-        ?>
-        <div class="team-card glass fade-in <?php echo 'delay-' . (($index % 6) + 1); ?>">
-            <div class="team-avatar">
-                <img src="https://imgapi.cn/qq.php?qq=<?php echo htmlspecialchars($member['qq_number']); ?>" alt="<?php echo htmlspecialchars($member['name']); ?>头像">
-            </div>
-            <h3><?php echo htmlspecialchars($member['name']); ?></h3>
-            <div class="team-role"><?php echo htmlspecialchars($member['role']); ?></div>
-            <p><?php echo htmlspecialchars($member['description']); ?></p>
-        </div>
-        <?php endforeach; ?>
+    <div class="team-members" id="team-container">
+        <!-- 动态内容将通过JavaScript加载 -->
     </div>
 </section>
 
 <!-- Resource Section -->
 <section id="resource">
-    <div class="section-header">
-        <?php
-        // 获取资源下载简介信息
-        $db = new SQLite3('sql/settings.db');
-        $introResult = $db->query("SELECT title, description FROM resource_sections WHERE section_type = 'intro' ORDER BY sort_order ASC, id ASC LIMIT 1");
-        $intro = $introResult->fetchArray(SQLITE3_ASSOC);
-        ?>
-        <h2 class="fade-in"><?php echo htmlspecialchars($intro['title'] ?? '资源下载'); ?></h2>
-        <p class="fade-in delay-1"><?php echo htmlspecialchars($intro['description'] ?? '获取服务器专用资源包，优化您的游戏体验'); ?></p>
+    <div class="section-header" id="resource-intro">
+        <!-- 动态内容将通过JavaScript加载 -->
     </div>
     <div class="download-content">
-        <div class="download-steps">
-            <?php
-            // 获取资源下载卡片信息
-            $cardsResult = $db->query("SELECT title, description FROM resource_sections WHERE section_type = 'card' ORDER BY sort_order ASC, id ASC");
-            $delay = 0;
-            while ($card = $cardsResult->fetchArray(SQLITE3_ASSOC)) {
-                $delay++;
-                ?>
-                <div class="step-card glass fade-in delay-<?php echo $delay; ?>">
-                    <div class="step-num"><?php echo $delay; ?></div>
-                    <h3><?php echo htmlspecialchars($card['title']); ?></h3>
-                    <p><?php echo htmlspecialchars($card['description']); ?></p>
-                </div>
-                <?php
-            }
-            $db->close();
-            ?>
+        <div class="download-steps" id="resource-cards">
+            <!-- 动态内容将通过JavaScript加载 -->
         </div>
         <a href="javascript:void(0);" id="resource-download-link" class="download-link btn fade-in delay-3" target="_blank">
             <i class="fas fa-file-download"></i> 下载资源包
@@ -427,7 +330,7 @@ $qrUrl = $dbVars['qrUrl'];
         const video = document.getElementById("video-bg");
         const musicControl = document.getElementById("music-control");
         const icon = musicControl.querySelector("i");
-        
+
         // 移动端下拉菜单功能
         const mobileNavSelect = document.getElementById('mobile-nav-select');
         mobileNavSelect.addEventListener('change', function() {
@@ -440,7 +343,7 @@ $qrUrl = $dbVars['qrUrl'];
                 });
             }
         });
-        
+
         // 从Cookie中获取保存的音乐播放状态
         function getMusicPlayState() {
             const cookies = document.cookie.split(';');
@@ -452,7 +355,7 @@ $qrUrl = $dbVars['qrUrl'];
             }
             return false; // 默认为暂停状态
         }
-        
+
         // 保存音乐播放状态到Cookie
         function saveMusicPlayState(isPlaying) {
             // 保存30天
@@ -460,7 +363,7 @@ $qrUrl = $dbVars['qrUrl'];
             expiryDate.setTime(expiryDate.getTime() + (30 * 24 * 60 * 60 * 1000));
             document.cookie = `musicPlayState=${isPlaying ? 'play' : 'pause'}; expires=${expiryDate.toUTCString()}; path=/`;
         }
-        
+
         // 页面加载时根据保存的状态设置初始图标
         if (getMusicPlayState()) {
             icon.classList.remove("fa-play");
@@ -469,7 +372,7 @@ $qrUrl = $dbVars['qrUrl'];
             icon.classList.remove("fa-music");
             icon.classList.add("fa-play");
         }
-        
+
         // 获取视频背景链接并设置视频源
         fetch('/api/video-url.php')
             .then(response => response.json())
@@ -485,7 +388,7 @@ $qrUrl = $dbVars['qrUrl'];
             .catch(error => {
                 console.error('获取视频背景链接失败:', error);
             });
-        
+
         // 获取音乐链接并设置音频源
         fetch('/api/music-url.php')
             .then(response => response.json())
@@ -495,7 +398,7 @@ $qrUrl = $dbVars['qrUrl'];
                     source.src = data.url;
                     source.type = 'audio/mpeg';
                     audio.appendChild(source);
-                    
+
                     // 页面加载完成后，如果保存的状态是播放，则自动播放音乐
                     if (getMusicPlayState()) {
                         audio.play().catch(error => {
@@ -510,7 +413,7 @@ $qrUrl = $dbVars['qrUrl'];
             .catch(error => {
                 console.error('获取音乐链接失败:', error);
             });
-        
+
         // 切换播放/暂停
         musicControl.addEventListener("click", function() {
             if (audio.paused) {
@@ -530,7 +433,7 @@ $qrUrl = $dbVars['qrUrl'];
                 saveMusicPlayState(false);
             }
         });
-        
+
         // 获取资源包真实链接并设置下载按钮
         fetch('/api/resource-url.php')
             .then(response => response.json())
@@ -560,7 +463,231 @@ $qrUrl = $dbVars['qrUrl'];
                         }
                     });
             });
+
+        // 获取服务器特点列表并动态加载
+        fetch('/api/server-features.php')
+            .then(response => response.json())
+            .then(data => {
+                const featuresContainer = document.getElementById('features-container');
+                if (featuresContainer && data.features) {
+                    let featuresHTML = '';
+                    data.features.forEach((feature, index) => {
+                        const delayClass = 'delay-' + ((index % 4) + 1);
+                        featuresHTML += `
+                        <div class="feature-card glass fade-in ${delayClass}">
+                            <div class="feature-icon">
+                                ${feature.icon_code.startsWith('<svg') ?
+                                    `<div class="svg-icon-wrapper">${feature.icon_code.replace('<svg', '<svg style="width:100%;height:100%"')}</div>` :
+                                    (feature.icon_code.startsWith('icon-') ?
+                                        `<i class="iconfont ${feature.icon_code}"></i>` :
+                                        `<i class="${feature.icon_code}"></i>`)}
+                            </div>
+                            <h3>${feature.title}</h3>
+                            <p>${feature.description}</p>
+                        </div>`;
+                    });
+                    featuresContainer.innerHTML = featuresHTML;
+                }
+            })
+            .catch(error => {
+                console.error('获取服务器特点列表失败:', error);
+            });
+
+        // 获取展览图片列表并动态加载
+        fetch('/api/gallery-images.php')
+            .then(response => response.json())
+            .then(data => {
+                const galleryContainer = document.getElementById('gallery-container');
+                const galleryMoreContainer = document.getElementById('gallery-more-container');
+                if (galleryContainer && data.images) {
+                    // 计算需要显示的图片数量
+                    // 桌面端最多显示两排（每排4个），移动端最多显示5个
+                    const maxImages = window.innerWidth <= 768 ? 5 : 8;
+                    const showAllImages = data.images.length <= maxImages;
+                    
+                    // 生成图片HTML
+                    let galleryHTML = '';
+                    const imagesToShow = showAllImages ? data.images : data.images.slice(0, maxImages);
+                    imagesToShow.forEach((image, index) => {
+                        const delayClass = 'delay-' + (((index + 3) % 4) + 1);
+                        galleryHTML += `
+                        <div class="gallery-item glass fade-in ${delayClass}">
+                            <img src="${image.image_url}" alt="${image.alt_text}" class="gallery-image" data-fullsize="${image.image_url}">
+                        </div>`;
+                    });
+                    galleryContainer.innerHTML = galleryHTML;
+                    
+                    // 如果图片数量超过限制，添加"展开更多"按钮
+                    if (!showAllImages) {
+                        galleryMoreContainer.innerHTML = `
+                            <button id="toggle-gallery" class="more-btn fade-in delay-4" data-expanded="false">
+                                展开更多 <i class="fas fa-angle-down"></i>
+                            </button>`;
+                        
+                        // 添加展开更多按钮事件监听器
+                        const toggleButton = document.getElementById('toggle-gallery');
+                        toggleButton.addEventListener('click', function() {
+                            const isExpanded = this.getAttribute('data-expanded') === 'true';
+                            
+                            if (isExpanded) {
+                                // 收起图片
+                                this.innerHTML = '展开更多 <i class="fas fa-angle-down"></i>';
+                                this.setAttribute('data-expanded', 'false');
+                                
+                                // 移除额外的图片
+                                const allItems = galleryContainer.querySelectorAll('.gallery-item');
+                                for (let i = maxImages; i < allItems.length; i++) {
+                                    allItems[i].style.animation = 'fadeOut 0.3s ease forwards';
+                                    setTimeout(() => {
+                                        if (allItems[i]) {
+                                            allItems[i].remove();
+                                        }
+                                    }, 300);
+                                }
+                            } else {
+                                // 展开图片
+                                this.innerHTML = '收起 <i class="fas fa-angle-up"></i>';
+                                this.setAttribute('data-expanded', 'true');
+                                
+                                // 添加额外的图片
+                                const imagesToAdd = data.images.slice(maxImages);
+                                imagesToAdd.forEach((image, index) => {
+                                    const delayClass = 'delay-' + (((index + 3) % 4) + 1);
+                                    const newItem = document.createElement('div');
+                                    newItem.className = `gallery-item glass fade-in ${delayClass}`;
+                                    newItem.style.animation = 'fadeIn 0.3s ease forwards';
+                                    newItem.innerHTML = `
+                                        <img src="${image.image_url}" alt="${image.alt_text}" class="gallery-image" data-fullsize="${image.image_url}">
+                                    `;
+                                    galleryContainer.appendChild(newItem);
+                                });
+                            }
+                            
+                            // 重新绑定图片点击事件
+                            setTimeout(() => {
+                                attachImageClickListeners();
+                            }, 350);
+                        });
+                    } else {
+                        galleryMoreContainer.innerHTML = '';
+                    }
+                    
+                    // 添加图片点击事件监听器
+                    attachImageClickListeners();
+                }
+            })
+            .catch(error => {
+                console.error('获取展览图片列表失败:', error);
+            });
+
+        // 获取团队成员列表并动态加载
+        fetch('/api/team-members.php')
+            .then(response => response.json())
+            .then(data => {
+                const teamContainer = document.getElementById('team-container');
+                if (teamContainer && data.members) {
+                    let teamHTML = '';
+                    data.members.forEach((member, index) => {
+                        const delayClass = 'delay-' + ((index % 6) + 1);
+                        teamHTML += `
+                        <div class="team-card glass fade-in ${delayClass}">
+                            <div class="team-avatar">
+                                <img src="${member.avatar_url}" alt="${member.name}头像">
+                            </div>
+                            <h3>${member.name}</h3>
+                            <div class="team-role">${member.role}</div>
+                            <p>${member.description}</p>
+                        </div>`;
+                    });
+                    teamContainer.innerHTML = teamHTML;
+                }
+            })
+            .catch(error => {
+                console.error('获取团队成员列表失败:', error);
+            });
+
+        // 获取资源下载部分并动态加载
+        fetch('/api/resource-sections.php')
+            .then(response => response.json())
+            .then(data => {
+                // 加载简介部分
+                const resourceIntro = document.getElementById('resource-intro');
+                if (resourceIntro && data.intro) {
+                    resourceIntro.innerHTML = `
+                        <h2 class="fade-in">${data.intro.title}</h2>
+                        <p class="fade-in delay-1">${data.intro.description}</p>`;
+                }
+
+                // 加载卡片部分
+                const resourceCards = document.getElementById('resource-cards');
+                if (resourceCards && data.cards) {
+                    let cardsHTML = '';
+                    data.cards.forEach((card, index) => {
+                        const delayClass = 'delay-' + (index + 1);
+                        cardsHTML += `
+                        <div class="step-card glass fade-in ${delayClass}">
+                            <div class="step-num">${index + 1}</div>
+                            <h3>${card.title}</h3>
+                            <p>${card.description}</p>
+                        </div>`;
+                    });
+                    resourceCards.innerHTML = cardsHTML;
+                }
+            })
+            .catch(error => {
+                console.error('获取资源下载部分失败:', error);
+            });
     });
+
+// 图片放大功能
+function attachImageClickListeners() {
+    // 创建模态框元素
+    const modal = document.createElement('div');
+    modal.className = 'image-modal';
+    modal.id = 'imageModal';
+    modal.innerHTML = `
+        <span class="close-modal">&times;</span>
+        <img class="image-modal-content" id="modalImage">
+    `;
+    document.body.appendChild(modal);
+    
+    // 获取模态框元素
+    const modalElement = document.getElementById('imageModal');
+    const modalImg = document.getElementById('modalImage');
+    const closeBtn = document.querySelector('.close-modal');
+    
+    // 为所有图片添加点击事件
+    const images = document.querySelectorAll('.gallery-image');
+    images.forEach(img => {
+        img.addEventListener('click', function() {
+            modalElement.style.display = 'block';
+            modalImg.src = this.getAttribute('data-fullsize') || this.src;
+            document.body.style.overflow = 'hidden'; // 防止背景滚动
+        });
+    });
+    
+    // 点击关闭按钮关闭模态框
+    closeBtn.onclick = function() {
+        modalElement.style.display = 'none';
+        document.body.style.overflow = 'auto'; // 恢复背景滚动
+    };
+    
+    // 点击模态框背景关闭模态框
+    modalElement.onclick = function(event) {
+        if (event.target === modalElement) {
+            modalElement.style.display = 'none';
+            document.body.style.overflow = 'auto'; // 恢复背景滚动
+        }
+    };
+    
+    // 按ESC键关闭模态框
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape' && modalElement.style.display === 'block') {
+            modalElement.style.display = 'none';
+            document.body.style.overflow = 'auto'; // 恢复背景滚动
+        }
+    });
+}
 
 // 在页面加载时更新二维码图片
 document.addEventListener("DOMContentLoaded", function() {

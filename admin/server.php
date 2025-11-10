@@ -103,13 +103,19 @@ if (isset($_POST['action'])) {
                 }
                 
                 if (!$hasError) {
-                    header("Location: server.php?message=" . urlencode('服务器设置已成功更新！'));
-                    exit();
+                    $message = '服务器设置已成功更新！';
                 }
             } catch (Exception $e) {
                 $message = '更新失败：' . $e->getMessage();
             }
         }
+        
+        // 添加JavaScript以滚动到服务器设置部分
+        echo '<script>
+            document.addEventListener("DOMContentLoaded", function() {
+                window.location.hash = "server-form";
+            });
+        </script>';
     } elseif ($_POST['action'] === 'add_feature') {
         // 添加服务器特点
         $iconCode = trim($_POST['icon_code']);
@@ -128,8 +134,7 @@ if (isset($_POST['action'])) {
                 $stmt->bindValue(':sort_order', $sortOrder, SQLITE3_INTEGER);
                 
                 if ($stmt->execute()) {
-                    header("Location: server.php?message=" . urlencode('服务器特点已成功添加！'));
-                    exit();
+                    $message = '服务器特点已成功添加！';
                 } else {
                     $message = '添加服务器特点失败，请重试。';
                 }
@@ -137,6 +142,13 @@ if (isset($_POST['action'])) {
                 $message = '添加失败：' . $e->getMessage();
             }
         }
+        
+        // 添加JavaScript以滚动到服务器特点管理部分
+        echo '<script>
+            document.addEventListener("DOMContentLoaded", function() {
+                window.location.hash = "server-features-section";
+            });
+        </script>';
     } elseif ($_POST['action'] === 'update_feature') {
         // 更新服务器特点
         $id = intval($_POST['feature_id']);
@@ -157,8 +169,7 @@ if (isset($_POST['action'])) {
                 $stmt->bindValue(':sort_order', $sortOrder, SQLITE3_INTEGER);
                 
                 if ($stmt->execute()) {
-                    header("Location: server.php?message=" . urlencode('服务器特点已成功更新！'));
-                    exit();
+                    $message = '服务器特点已成功更新！';
                 } else {
                     $message = '更新服务器特点失败，请重试。';
                 }
@@ -166,6 +177,13 @@ if (isset($_POST['action'])) {
                 $message = '更新失败：' . $e->getMessage();
             }
         }
+        
+        // 添加JavaScript以滚动到服务器特点管理部分
+        echo '<script>
+            document.addEventListener("DOMContentLoaded", function() {
+                window.location.hash = "server-features-section";
+            });
+        </script>';
     } elseif ($_POST['action'] === 'delete_feature') {
         // 删除服务器特点
         $id = intval($_POST['feature_id']);
@@ -175,22 +193,33 @@ if (isset($_POST['action'])) {
             $stmt->bindValue(':id', $id, SQLITE3_INTEGER);
             
             if ($stmt->execute()) {
-                header("Location: server.php?message=" . urlencode('服务器特点已成功删除！'));
-                exit();
+                $message = '服务器特点已成功删除！';
             } else {
                 $message = '删除服务器特点失败，请重试。';
             }
         } catch (Exception $e) {
             $message = '删除失败：' . $e->getMessage();
         }
+        
+        // 添加JavaScript以滚动到服务器特点管理部分
+        echo '<script>
+            document.addEventListener("DOMContentLoaded", function() {
+                window.location.hash = "server-features-section";
+            });
+        </script>';
     }
 }
 ?>
 
-<div class="card">
+<div class="card" id="server-form">
     <h2 class="card-title">
         <i class="fas fa-server"></i> 服务器设置
     </h2>
+    <?php if (isset($message)): ?>
+        <div class="message <?php echo strpos($message, '成功') !== false ? 'success' : 'error'; ?>">
+            <?php echo htmlspecialchars($message); ?>
+        </div>
+    <?php endif; ?>
     <form method="post">
         <input type="hidden" name="action" value="update_server">
         <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrfToken); ?>">
@@ -248,7 +277,7 @@ if (isset($_POST['action'])) {
 </div>
 
 <!-- 服务器特点管理 -->
-<div class="card">
+<div class="card" id="server-features-section">
     <h2 class="card-title">
         <i class="fas fa-star"></i> 服务器特点管理
     </h2>
@@ -256,6 +285,7 @@ if (isset($_POST['action'])) {
     <!-- 添加服务器特点表单 -->
     <form method="post" class="mb-4">
         <input type="hidden" name="action" value="add_feature">
+        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrfToken); ?>">
         <h3>添加新特点</h3>
         <div class="form-group">
             <label class="form-label" for="icon_code">图标代码</label>
@@ -316,6 +346,7 @@ if (isset($_POST['action'])) {
             <form method="post">
                 <input type="hidden" name="action" value="update_feature">
                 <input type="hidden" name="feature_id" value="<?php echo $feature['id']; ?>">
+                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrfToken); ?>">
                 <div class="form-group">
                     <label class="form-label">图标代码</label>
                     <textarea 
@@ -396,6 +427,16 @@ function deleteFeature(featureId) {
         form.submit();
     }
 }
+
+// 页面加载后，如果有hash，则滚动到对应位置
+document.addEventListener('DOMContentLoaded', function() {
+    if (window.location.hash) {
+        var targetElement = document.querySelector(window.location.hash);
+        if (targetElement) {
+            targetElement.scrollIntoView();
+        }
+    }
+});
 </script>
 
 <div class="card">

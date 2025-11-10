@@ -35,8 +35,8 @@ if (isset($_POST['action']) && $_POST['action'] === 'update_music') {
             }
             
             if ($stmt->execute()) {
-                header("Location: music.php?message=" . urlencode('音乐设置已成功更新！'));
-                exit();
+                // 成功更新后显示消息但不跳转
+                $message = '音乐设置已成功更新！';
             } else {
                 $message = '更新失败，请重试。';
             }
@@ -46,13 +46,25 @@ if (isset($_POST['action']) && $_POST['action'] === 'update_music') {
     } else {
         $message = '请输入有效的音乐URL。';
     }
+    
+    // 添加JavaScript以滚动到音乐管理部分
+    echo '<script>
+        document.addEventListener("DOMContentLoaded", function() {
+            window.location.hash = "music-form";
+        });
+    </script>';
 }
 ?>
 
-<div class="card">
+<div class="card" id="music-form">
     <h2 class="card-title">
         <i class="fas fa-music"></i> 音乐管理
     </h2>
+    <?php if (isset($message)): ?>
+        <div class="message <?php echo strpos($message, '成功') !== false ? 'success' : 'error'; ?>">
+            <?php echo htmlspecialchars($message); ?>
+        </div>
+    <?php endif; ?>
     <form method="post">
         <input type="hidden" name="action" value="update_music">
         <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrfToken); ?>">
