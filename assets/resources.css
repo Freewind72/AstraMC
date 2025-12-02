@@ -1,0 +1,497 @@
+/* 资源中心页面样式 */
+.resources {
+    min-height: 100vh;
+    padding: 100px 5% 50px;
+    position: relative;
+}
+
+.resources-content {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.resources-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+    margin: 30px auto 0;
+    justify-content: center;
+    max-width: 1400px;
+    justify-items: center;
+}
+
+/* 在大屏幕上限制最大列数为4 */
+@media (min-width: 1200px) {
+    .resources-grid {
+        grid-template-columns: repeat(4, 1fr);
+        max-width: 1210px; /* 4列 * 280px + 3 gaps * 30px = 1210px */
+        margin: 30px auto 0;
+        justify-items: center;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+    .resources-grid {
+        grid-template-columns: repeat(3, 1fr);
+        justify-items: center;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    .resources-grid {
+        grid-template-columns: repeat(2, 1fr);
+        justify-items: center;
+    }
+}
+
+@media (max-width: 767px) {
+    .resources-grid {
+        grid-template-columns: 1fr;
+        justify-items: center;
+    }
+}
+
+.resource-card {
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 350px; /* 设置最小高度确保统一大小 */
+    transition: all 0.4s ease;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transform: translateY(50px);
+    opacity: 0;
+    width: 100%; /* 确保卡片占满网格单元格 */
+}
+
+.resource-card.fade-in {
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.resource-card:hover {
+    transform: translateY(-10px) !important;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+}
+
+.resource-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, rgba(81, 168, 101, 0.1), rgba(37, 120, 60, 0.1));
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.resource-card:hover::before {
+    opacity: 1;
+}
+
+.resource-icon {
+    width: 80px;
+    height: 80px;
+    background: var(--glass-dark);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 36px;
+    color: var(--accent);
+    transition: all 0.4s ease;
+    animation: float 3s ease-in-out infinite;
+    flex-shrink: 0; /* 防止图标在小屏幕上被压缩 */
+}
+
+/* 固定 SVG 图标大小 */
+.svg-icon-wrapper svg {
+    width: 48px !important;
+    height: 48px !important;
+}
+
+.resource-card:hover .resource-icon {
+    transform: scale(1.1) rotate(10deg);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.resource-card h3 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: var(--accent);
+    flex-shrink: 0; /* 防止标题被压缩 */
+}
+
+.resource-card p {
+    color: #ddd;
+    margin-bottom: 20px;
+    flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+.resource-size {
+    margin: 10px 0;
+    padding: 8px 15px;
+    background: var(--glass-dark);
+    border-radius: 20px;
+    font-size: 14px;
+    color: #bbb;
+    display: inline-block;
+    align-self: center;
+    flex-shrink: 0; /* 防止大小信息被压缩 */
+    min-height: 36px; /* 统一高度 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.resource-size i {
+    margin-right: 5px;
+}
+
+.download-btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 12px 25px;
+    background: var(--primary);
+    color: white;
+    border-radius: 50px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.4s ease;
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    flex-shrink: 0; /* 防止按钮被压缩 */
+    align-self: center;
+}
+
+.download-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.download-btn i {
+    margin-right: 8px;
+}
+
+.no-resources {
+    text-align: center;
+    padding: 50px;
+    font-size: 20px;
+    color: #999;
+    grid-column: 1 / -1;
+}
+
+.loading-placeholder {
+    text-align: center;
+    padding: 50px;
+    font-size: 20px;
+    color: #999;
+    grid-column: 1 / -1;
+}
+
+/* 回到顶部按钮 */
+.back-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    background: var(--accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--dark);
+    text-decoration: none;
+    font-size: 22px;
+    transition: var(--transition);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 999;
+}
+
+.back-to-top.show {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.back-to-top:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(255, 190, 80, 0.5);
+}
+
+/* Music Control Button */
+.music-control {
+    position: fixed;
+    bottom: 100px; /* 在回到顶部按钮上方 */
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    background: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 22px;
+    transition: var(--transition);
+    z-index: 999;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.music-control:hover {
+    background: var(--primary-dark);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* 动画效果 */
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 添加移动端菜单样式 */
+@media (max-width: 992px) {
+    /* 移动端菜单按钮 */
+    .menu-toggle {
+        display: none;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 30px;
+        height: 21px;
+        cursor: pointer;
+        z-index: 1001;
+    }
+
+    .menu-toggle span {
+        display: block;
+        height: 3px;
+        width: 100%;
+        background-color: white;
+        border-radius: 3px;
+        transition: var(--transition);
+    }
+
+    /* 移动端下拉菜单 */
+    .mobile-nav-select {
+        display: none;
+        width: 100%;
+        padding: 10px 15px;
+        background: rgba(10, 20, 35, 0.85);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        font-size: 16px;
+        margin-top: 10px;
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 1em;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .mobile-nav-select:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(255, 190, 80, 0.3);
+    }
+
+    .mobile-nav-select:hover {
+        background: rgba(20, 40, 65, 0.85);
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        transform: translateY(-2px);
+    }
+
+    /* 在移动端隐藏桌面导航 */
+    .nav-links.desktop-nav {
+        display: none;
+    }
+
+    /* 调整移动端导航布局 */
+    nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .logo {
+        order: 1;
+    }
+
+    .btn {
+        order: 2;
+        margin-left: auto;
+    }
+    
+    /* 缩小移动端logo图标 */
+    .logo.fade-in img {
+        width: 50px;
+        height: auto;
+    }
+    
+    /* 放大并靠右对齐移动端顶栏立即加入按钮 */
+    header .btn {
+        padding: 15px 30px;
+        font-size: 16px;
+        width: auto;
+        max-width: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .resource-card {
+        padding: 20px;
+        min-height: 320px; /* 在小屏幕上调整最小高度 */
+    }
+    
+    .resource-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 28px;
+    }
+    
+    .resource-card h3 {
+        font-size: 20px;
+    }
+    
+    /* 在移动端调整音乐控制按钮位置 */
+    .music-control {
+        bottom: 100px;
+        right: 20px;
+        width: 45px;
+        height: 45px;
+        font-size: 20px;
+    }
+    
+    .back-to-top {
+        bottom: 20px;
+        right: 20px;
+        width: 45px;
+        height: 45px;
+        font-size: 20px;
+    }
+    
+    /* 调整移动端下拉菜单宽度和图标大小 */
+    .mobile-nav-select {
+        width: auto;
+        max-width: 200px;
+        padding: 8px 12px;
+        font-size: 16px;
+        background-size: 1em;
+    }
+    
+    .logo img {
+        width: 50px;
+    }
+    
+    .logo {
+        font-size: 20px;
+    }
+    
+    /* 放大并靠右对齐移动端顶栏立即加入按钮 */
+    header .btn {
+        padding: 12px 25px;
+        font-size: 15px;
+        max-width: none;
+    }
+}
+
+@media (max-width: 576px) {
+    .resource-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 24px;
+    }
+    
+    .resource-card h3 {
+        font-size: 18px;
+    }
+    
+    .resource-card {
+        min-height: 300px; /* 在更小屏幕上调整最小高度 */
+    }
+    
+    .download-btn {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+    
+    /* 进一步调整小屏幕下的移动端下拉菜单 */
+    .mobile-nav-select {
+        max-width: 150px;
+        padding: 6px 10px;
+        font-size: 12px;
+        background-size: 0.8em;
+    }
+
+    .logo img {
+        width: 40px;
+    }
+
+    .logo {
+        font-size: 18px;
+    }
+    
+    /* 进一步调整小屏幕下的图标大小 */
+    .logo i {
+        font-size: 24px;
+    }
+    
+    .step-num {
+        width: 45px;
+        height: 45px;
+        font-size: 20px;
+    }
+    
+    .status-value {
+        font-size: 22px;
+    }
+    
+    /* 小屏幕下进一步缩小logo图标 */
+    .logo.fade-in img {
+        width: 35px;
+        height: auto;
+    }
+    
+    /* 放大并靠右对齐移动端顶栏立即加入按钮 */
+    header .btn {
+        padding: 10px 20px;
+        font-size: 14px;
+        max-width: none;
+    }
+}

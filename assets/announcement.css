@@ -1,0 +1,309 @@
+/* 公告弹窗样式 */
+.announcement-modal {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.3s ease-out;
+}
+
+.announcement-modal.show {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.announcement-content {
+    background: rgba(10, 20, 35, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    width: 600px;
+    max-width: 90%;
+    max-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    animation: slideIn 0.3s ease-out;
+}
+
+/* 固定顶栏 */
+.announcement-header {
+    position: relative;
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
+}
+
+.announcement-header h1 {
+    font-size: 24px;
+    margin: 0;
+    color: #fff;
+    text-align: center;
+}
+
+.announcement-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #999;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s;
+    z-index: 10002;
+}
+
+.announcement-close:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+/* 滚动内容区域 */
+.announcement-body {
+    padding: 20px 30px;
+    overflow-y: auto;
+    flex-grow: 1;
+    text-align: left;
+}
+
+/* 隐藏滚动条但保持滚动功能 */
+.announcement-body::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+}
+
+.announcement-body {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* 公告内容布局 - 独立样式，避免受顶栏和底栏影响 */
+.announcement-content .announcement-body.left * {
+    text-align: left;
+    text-align-last: left;
+}
+
+.announcement-content .announcement-body.left h2 {
+    font-size: 22px;
+    margin: 15px 0 12px;
+    color: var(--accent, #ffbe50);
+    text-align: left;
+}
+
+.announcement-content .announcement-body.left h3 {
+    font-size: 20px;
+    margin: 12px 0 10px;
+    color: #ddd;
+    text-align: left;
+}
+
+.announcement-content .announcement-body.left h4 {
+    font-size: 18px;
+    margin: 10px 0 8px;
+    color: #ccc;
+    text-align: left;
+}
+
+.announcement-content .announcement-body.left h5 {
+    font-size: 16px;
+    margin: 10px 0 8px;
+    color: #bbb;
+    text-align: left;
+}
+
+.announcement-content .announcement-body.left p {
+    margin: 8px 0;
+    line-height: 1.5;
+    color: #ddd;
+    text-align: left;
+}
+
+.announcement-content .announcement-body.left ul,
+.announcement-content .announcement-body.left ol {
+    margin: 8px 0;
+    padding-left: 20px;
+    text-align: left;
+}
+
+.announcement-content .announcement-body.left li {
+    margin: 4px 0;
+    line-height: 1.4;
+    color: #ddd;
+    text-align: left;
+}
+
+.announcement-content .announcement-body.left strong {
+    font-weight: bold;
+    color: #fff;
+}
+
+.announcement-content .announcement-body.left em {
+    font-style: italic;
+}
+
+.announcement-content .announcement-body.left u {
+    text-decoration: underline;
+}
+
+/* 居中对齐样式 */
+.announcement-content .announcement-body.center * {
+    text-align: center;
+    text-align-last: center;
+}
+
+.announcement-content .announcement-body.center h2 {
+    font-size: 22px;
+    margin: 15px 0 12px;
+    color: var(--accent, #ffbe50);
+    text-align: center;
+}
+
+.announcement-content .announcement-body.center h3 {
+    font-size: 20px;
+    margin: 12px 0 10px;
+    color: #ddd;
+    text-align: center;
+}
+
+.announcement-content .announcement-body.center h4 {
+    font-size: 18px;
+    margin: 10px 0 8px;
+    color: #ccc;
+    text-align: center;
+}
+
+.announcement-content .announcement-body.center h5 {
+    font-size: 16px;
+    margin: 10px 0 8px;
+    color: #bbb;
+    text-align: center;
+}
+
+.announcement-content .announcement-body.center p {
+    margin: 8px 0;
+    line-height: 1.5;
+    color: #ddd;
+    text-align: center;
+}
+
+.announcement-content .announcement-body.center ul,
+.announcement-content .announcement-body.center ol {
+    margin: 8px 0;
+    padding-left: 20px;
+    text-align: center;
+}
+
+.announcement-content .announcement-body.center li {
+    margin: 4px 0;
+    line-height: 1.4;
+    color: #ddd;
+    text-align: center;
+}
+
+.announcement-content .announcement-body.center strong {
+    font-weight: bold;
+    color: #fff;
+}
+
+.announcement-content .announcement-body.center em {
+    font-style: italic;
+}
+
+.announcement-content .announcement-body.center u {
+    text-decoration: underline;
+}
+
+.announcement-footer {
+    padding: 15px 30px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
+}
+
+.announcement-button {
+    padding: 10px 24px;
+    background: rgba(81, 168, 101, 0.8);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.4s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.announcement-button:hover {
+    background: rgba(37, 120, 60, 0.85);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    .announcement-content {
+        width: 95%;
+        max-height: 80vh;
+        margin: 20px;
+    }
+    
+    .announcement-header h1 {
+        font-size: 20px;
+    }
+    
+    .announcement-body {
+        padding: 15px 20px;
+    }
+    
+    .announcement-body h2 {
+        font-size: 20px;
+    }
+    
+    .announcement-body h3 {
+        font-size: 18px;
+    }
+    
+    .announcement-footer {
+        flex-direction: column;
+        gap: 10px;
+        padding: 15px 20px;
+    }
+    
+    .announcement-button {
+        width: 100%;
+        padding: 12px 20px;
+    }
+}
