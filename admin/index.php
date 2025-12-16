@@ -39,7 +39,7 @@ if ($securityManager->isSessionExpired()) {
 $_SESSION['last_activity'] = time();
 
 // 定义页面标题
-define('PAGE_TITLE', '管理面板 - 原始大陆');
+define('PAGE_TITLE', '管理面板 - 牧云山庄');
 
 // 获取各种统计数据
 // 1. 公告信息
@@ -151,6 +151,22 @@ function timeAgo($datetime) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <?php 
+    // 获取favicon URL
+    $faviconUrl = '';
+    try {
+        $faviconResult = $db->query("SELECT favicon_url FROM site_settings WHERE id = 1 LIMIT 1");
+        if ($faviconResult) {
+            $faviconRow = $faviconResult->fetchArray(SQLITE3_ASSOC);
+            $faviconUrl = $faviconRow ? $faviconRow['favicon_url'] : '';
+        }
+    } catch (Exception $e) {
+        $faviconUrl = '';
+    }
+    
+    if (!empty($faviconUrl)): ?>
+    <link rel="icon" href="<?php echo htmlspecialchars($faviconUrl); ?>" type="image/x-icon">
+    <?php endif; ?>
     <title><?php echo PAGE_TITLE; ?></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/admin-styles.css">
@@ -318,7 +334,7 @@ function timeAgo($datetime) {
                 }
             })
             .catch(error => {
-                console.error('获取访问记录失败:', error);
+                // console.error('获取访问记录失败:', error);
                 document.getElementById('loading-message').style.display = 'none';
                 document.getElementById('no-logs-message').style.display = 'block';
             });
@@ -405,7 +421,7 @@ function timeAgo($datetime) {
                         }
                     })
                     .catch(error => {
-                        console.error('获取IP归属地失败:', error);
+                        // console.error('获取IP归属地失败:', error);
                         // 显示更具体的错误信息
                         locationText.textContent = '获取失败';
                     });

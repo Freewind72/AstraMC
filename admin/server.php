@@ -265,7 +265,7 @@ if (isset($_POST['action'])) {
                     </div>
                     <div class="form-group">
                         <label class="form-label">服务器名称</label>
-                        <input type="text" name="servers[0][name]" class="form-input" placeholder="请输入服务器名称，例如: 原始大陆">
+                        <input type="text" name="servers[0][name]" class="form-input" placeholder="请输入服务器名称，例如: 牧云山庄">
                     </div>
                     <div class="form-group">
                         <label class="form-checkbox">
@@ -288,7 +288,7 @@ if (isset($_POST['action'])) {
                     </div>
                     <div class="form-group">
                         <label class="form-label">服务器名称</label>
-                        <input type="text" name="servers[<?php echo $index; ?>][name]" class="form-input" placeholder="请输入服务器名称，例如: 原始大陆" value="<?php echo htmlspecialchars($server['server_name']); ?>">
+                        <input type="text" name="servers[<?php echo $index; ?>][name]" class="form-input" placeholder="请输入服务器名称，例如: 牧云山庄" value="<?php echo htmlspecialchars($server['server_name']); ?>">
                     </div>
                     <div class="form-group">
                         <label class="form-checkbox">
@@ -453,7 +453,7 @@ function addServer() {
         </div>
         <div class="form-group">
             <label class="form-label">服务器名称</label>
-            <input type="text" name="servers[${serverCount}][name]" class="form-input" placeholder="请输入服务器名称，例如: 原始大陆">
+            <input type="text" name="servers[${serverCount}][name]" class="form-input" placeholder="请输入服务器名称，例如: 牧云山庄">
         </div>
         <div class="form-group">
             <label class="form-checkbox">

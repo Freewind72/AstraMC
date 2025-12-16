@@ -2,7 +2,7 @@
 // 全局配置文件
 
 // 定义网站标题
-define('SITE_NAME', '原始大陆');
+define('SITE_NAME', '牧云山庄');
 define('ADMIN_PANEL_TITLE', '管理面板 - ' . SITE_NAME);
 
 // 定义版本信息
@@ -14,7 +14,7 @@ define('ROOT_PATH', dirname(__DIR__));
 
 // 定义默认设置
 define('DEFAULT_SERVER_ADDRESS', 'mcda.xin');
-define('DEFAULT_SERVER_NAME', '原始大陆');
+define('DEFAULT_SERVER_NAME', '牧云山庄');
 
 // 定义分页设置
 define('ITEMS_PER_PAGE', 20);

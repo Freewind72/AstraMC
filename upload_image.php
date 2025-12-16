@@ -375,9 +375,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <div class="container">
         <div class="card">
-            <h1 class="card-title">
+            <h2 class="card-title">
                 <i class="fas fa-cloud-upload-alt"></i> 图片上传
-            </h1>
+            </h2>
             
             <div style="background: rgba(52, 152, 219, 0.2); border: 1px solid #3498db; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
                 <p style="margin: 0; color: #3498db;">

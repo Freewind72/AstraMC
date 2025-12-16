@@ -314,7 +314,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 <div class="server-info">
                     <div class="server-name">${server.server_name}</div>
-                    <div class="server-address">${server.server_address}</div>
+                    <div class="server-address">***.***.***.***</div>
                 </div>
                 ${isPrimary}
             `;
@@ -398,7 +398,7 @@ const fetchServerStatus = async (serverAddress, serverName, showLoading = true) 
         
         // 如果没有提供服务器地址，则使用当前选中的服务器地址
         const address = serverAddress || (window.currentSelectedServer && window.currentSelectedServer.address) || 'mcda.xin';
-        const name = serverName || (window.currentSelectedServer && window.currentSelectedServer.name) || '原始大陆';
+        const name = serverName || (window.currentSelectedServer && window.currentSelectedServer.name) || '牧云山庄';
         
         // 显示加载动画（仅在首次加载时显示）
         const statusContainer = document.querySelector('.server-status');
@@ -427,15 +427,38 @@ const fetchServerStatus = async (serverAddress, serverName, showLoading = true) 
         }
         
         // 使用新的API获取服务器状态
-        const response = await fetch(`https://motd.minebbs.com/api/status?host=${address}`);
+        const response = await fetch(`https://mcapi.love72.top/api?host=${address}`);
         const data = await response.json();
 
         // 更新服务器信息
         document.getElementById('server-name').textContent = name;
-        document.getElementById('server-motd').textContent = data.pureMotd;
+
+        // 处理MOTD信息
+        let motdText = '';
+        if (data.pureMotd) {
+            motdText = data.pureMotd;
+        } else if (data.motd && data.motd.text) {
+            try {
+                // 尝试解析motd.text中的JSON字符串
+                const motdObj = JSON.parse(data.motd.text);
+                if (motdObj.extra && Array.isArray(motdObj.extra)) {
+                    motdText = motdObj.extra
+                        .filter(item => typeof item === 'object' && item.text)
+                        .map(item => item.text)
+                        .join('');
+                } else if (motdObj.text) {
+                    motdText = motdObj.text;
+                }
+            } catch (e) {
+                // 如果解析失败，直接使用motd.text
+                motdText = data.motd.text;
+            }
+        }
+
+        document.getElementById('server-motd').textContent = motdText;
         document.getElementById('player-count').textContent = `${data.players.online}`;
         document.getElementById('server-version').textContent = data.version;
-        document.getElementById('max-players').textContent = data.players.max;
+        document.getElementById('max-players').textContent = `${data.delay}ms`;
         
         // 计算并更新在线人数百分比进度条
         const online = data.players.online;
@@ -481,8 +504,6 @@ const fetchServerStatus = async (serverAddress, serverName, showLoading = true) 
             }
         }
 
-        console.log('服务器状态已更新:', data);
-        
         // 隐藏加载动画并执行淡出效果（仅在首次加载时）
         if (showLoading && loadingElement) {
             loadingElement.classList.add('fade-out');
@@ -501,8 +522,8 @@ const fetchServerStatus = async (serverAddress, serverName, showLoading = true) 
             window.hideLoadingOverlay = null;
         }
     } catch (error) {
-        console.error('获取服务器状态失败:', error);
-
+        // console.error('获取服务器状态失败:', error);
+        
         // 设置默认值
         document.getElementById('server-motd').textContent = '获取服务器状态失败，正在重试...';
         document.getElementById('player-count').textContent = '? / ?';

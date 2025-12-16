@@ -45,6 +45,8 @@ try {
         id INTEGER PRIMARY KEY,
         favicon_url TEXT DEFAULT '',
         logo_url TEXT DEFAULT '',
+        grayscale_mode INTEGER DEFAULT 0,
+        auto_grayscale_dates TEXT DEFAULT '12-13',
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )");
     
@@ -59,7 +61,29 @@ try {
     $checkSiteSettings = $db->query("SELECT COUNT(*) as count FROM site_settings");
     $siteSettingsRow = $checkSiteSettings->fetchArray(SQLITE3_ASSOC);
     if ($siteSettingsRow['count'] == 0) {
-        $db->exec("INSERT INTO site_settings (id, favicon_url, logo_url) VALUES (1, '', '')");
+        $db->exec("INSERT INTO site_settings (id, favicon_url, logo_url, grayscale_mode, auto_grayscale_dates) VALUES (1, '', '', 0, '12-13')");
+    }
+    
+    // 检查是否需要添加grayscale_mode字段
+    $columnsResult = $db->query("PRAGMA table_info(site_settings)");
+    $hasGrayscaleModeColumn = false;
+    $hasAutoGrayscaleDatesColumn = false;
+    
+    while ($column = $columnsResult->fetchArray(SQLITE3_ASSOC)) {
+        if ($column['name'] === 'grayscale_mode') {
+            $hasGrayscaleModeColumn = true;
+        }
+        if ($column['name'] === 'auto_grayscale_dates') {
+            $hasAutoGrayscaleDatesColumn = true;
+        }
+    }
+    
+    if (!$hasGrayscaleModeColumn) {
+        $db->exec("ALTER TABLE site_settings ADD COLUMN grayscale_mode INTEGER DEFAULT 0");
+    }
+    
+    if (!$hasAutoGrayscaleDatesColumn) {
+        $db->exec("ALTER TABLE site_settings ADD COLUMN auto_grayscale_dates TEXT DEFAULT '12-13'");
     }
 } catch (Exception $e) {
     // 忽略错误，继续执行
@@ -171,11 +195,15 @@ if (isset($_POST['action'])) {
     } elseif ($_POST['action'] === 'update_site_settings') {
         $faviconUrl = trim($_POST['favicon_url']);
         $logoUrl = trim($_POST['logo_url']);
+        $grayscaleMode = isset($_POST['grayscale_mode']) ? 1 : 0;
+        $autoGrayscaleDates = trim($_POST['auto_grayscale_dates']);
         
         try {
-            $stmt = $db->prepare("UPDATE site_settings SET favicon_url = :favicon_url, logo_url = :logo_url, updated_at = datetime('now') WHERE id = 1");
+            $stmt = $db->prepare("UPDATE site_settings SET favicon_url = :favicon_url, logo_url = :logo_url, grayscale_mode = :grayscale_mode, auto_grayscale_dates = :auto_grayscale_dates, updated_at = datetime('now') WHERE id = 1");
             $stmt->bindValue(':favicon_url', $faviconUrl, SQLITE3_TEXT);
             $stmt->bindValue(':logo_url', $logoUrl, SQLITE3_TEXT);
+            $stmt->bindValue(':grayscale_mode', $grayscaleMode, SQLITE3_INTEGER);
+            $stmt->bindValue(':auto_grayscale_dates', $autoGrayscaleDates, SQLITE3_TEXT);
             
             if ($stmt->execute()) {
                 // 使用PRG模式防止重复提交
@@ -346,6 +374,27 @@ function parsePlainText($text) {
                 placeholder="请输入Logo图片URL" 
                 value="<?php echo isset($siteSettings['logo_url']) ? htmlspecialchars($siteSettings['logo_url']) : ''; ?>">
             <small>建议使用高度为70px左右的透明PNG图片</small>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label" for="grayscale_mode">网站灰色模式</label>
+            <label class="form-checkbox">
+                <input type="checkbox" name="grayscale_mode" value="1" <?php echo (isset($siteSettings['grayscale_mode']) && $siteSettings['grayscale_mode']) ? 'checked' : ''; ?>>
+                <span>启用网站灰色模式</span>
+            </label>
+            <small>启用后整个网站将显示为灰色</small>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label" for="auto_grayscale_dates">自动启用灰色模式日期</label>
+            <input 
+                type="text" 
+                id="auto_grayscale_dates" 
+                name="auto_grayscale_dates" 
+                class="form-input" 
+                placeholder="请输入日期，格式 MM-DD，多个日期用逗号分隔" 
+                value="<?php echo isset($siteSettings['auto_grayscale_dates']) ? htmlspecialchars($siteSettings['auto_grayscale_dates']) : '12-13'; ?>">
+            <small>在这些日期网站将自动启用灰色模式（例如：国家公祭日）</small>
         </div>
         
         <button type="submit" class="btn btn-success">

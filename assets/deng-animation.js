@@ -28,3 +28,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+// 由于我们在jr.js中已经实现了滚动效果，这里可以简化或者移除重复的逻辑
+// 保留此文件以防其他地方还需要此功能

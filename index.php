@@ -4,7 +4,7 @@ define('ROOT_PATH', __DIR__);
 define('DB_PATH', ROOT_PATH . '/sql/settings.db');
 
 define('DEFAULT_SERVER_ADDRESS', 'mcda.xin');
-define('DEFAULT_SERVER_NAME', '原始大陆');
+define('DEFAULT_SERVER_NAME', '牧云山庄');
 
 $serverAddress = DEFAULT_SERVER_ADDRESS;
 $serverName = DEFAULT_SERVER_NAME;
@@ -103,34 +103,34 @@ logHomepageVisit();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
-    <meta name='description' content='原始大陆是专为Minecraft爱好者打造的Java版服务器，提供纯净生存、多人协作、公平竞技等丰富玩法。拥有专业管理团队、精美资源包和活跃社区，支持多种游戏模式。立即加入我们的冒险世界！'>
+    <meta name='description' content='牧云山庄是专为Minecraft爱好者打造的Java版服务器，提供纯净生存、多人协作、公平竞技等丰富玩法。拥有专业管理团队、精美资源包和活跃社区，支持多种游戏模式。立即加入我们的冒险世界！'>
     <meta name="msvalidate.01" content="1AA6DDA94EE94268E532CDAA869D51C3" />
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://<?php echo $_SERVER['HTTP_HOST']; ?>/">
-    <meta property="og:title" content="原始大陆 - Minecraft中国版Java服务器">
-    <meta property="og:description" content="原始大陆是专为Minecraft爱好者打造的Java版服务器，提供纯净生存、多人协作、公平竞技等丰富玩法。拥有专业管理团队、精美资源包和活跃社区，支持多种游戏模式。立即加入我们的冒险世界！">
+    <meta property="og:title" content="牧云山庄 - Minecraft中国版Java服务器">
+    <meta property="og:description" content="牧云山庄是专为Minecraft爱好者打造的Java版服务器，提供纯净生存、多人协作、公平竞技等丰富玩法。拥有专业管理团队、精美资源包和活跃社区，支持多种游戏模式。立即加入我们的冒险世界！">
     <?php if (!empty($logoUrl)): ?>
     <meta property="og:image" content="<?php echo htmlspecialchars($logoUrl); ?>">
     <?php else: ?>
     <meta property="og:image" content="https://p.qlogo.cn/gh/1046193413/1046193413/640/">
     <?php endif; ?>
-    <meta property="og:image:alt" content="原始大陆服务器Logo">
+    <meta property="og:image:alt" content="牧云山庄服务器Logo">
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://<?php echo $_SERVER['HTTP_HOST']; ?>/">
-    <meta property="twitter:title" content="原始大陆 - Minecraft中国版Java服务器">
-    <meta property="twitter:description" content="原始大陆是专为Minecraft爱好者打造的Java版服务器，提供纯净生存、多人协作、公平竞技等丰富玩法。拥有专业管理团队、精美资源包和活跃社区，支持多种游戏模式。立即加入我们的冒险世界！">
+    <meta property="twitter:title" content="牧云山庄 - Minecraft中国版Java服务器">
+    <meta property="twitter:description" content="牧云山庄是专为Minecraft爱好者打造的Java版服务器，提供纯净生存、多人协作、公平竞技等丰富玩法。拥有专业管理团队、精美资源包和活跃社区，支持多种游戏模式。立即加入我们的冒险世界！">
     <?php if (!empty($logoUrl)): ?>
     <meta property="twitter:image" content="<?php echo htmlspecialchars($logoUrl); ?>">
     <?php else: ?>
     <meta property="twitter:image" content="https://p.qlogo.cn/gh/1046193413/1046193413/640/">
     <?php endif; ?>
-    <meta property="twitter:image:alt" content="原始大陆服务器Logo">
+    <meta property="twitter:image:alt" content="牧云山庄服务器Logo">
     
-    <title>原始大陆 - Minecraft中国版Java服务器</title>
+    <title>牧云山庄 - Minecraft中国版Java服务器</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="//at.alicdn.com/t/font_3875679_4l5rcn7v98e.css">
     <link rel="stylesheet" href="assets/announcement.css">
@@ -141,6 +141,26 @@ logHomepageVisit();
 	<link rel="stylesheet" type="text/css" href="assets/css/style.css" />
     <link rel="stylesheet" href="assets/style.css">
     <link rel="stylesheet" href="assets/loading.css">
+    <script>
+    // 检查是否需要启用灰色模式
+    function checkGrayscaleMode() {
+        fetch('/api/grayscale-mode.php')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.enabled) {
+                    document.documentElement.style.filter = 'grayscale(100%)';
+                }
+            })
+            .catch(error => {
+                console.error('检查灰色模式失败:', error);
+            });
+    }
+    
+    // 页面加载完成后检查灰色模式
+    document.addEventListener('DOMContentLoaded', function() {
+        checkGrayscaleMode();
+    });
+    </script>
 	<script type="text/javascript" src="assets/js/jquery.min.js"></script>
 	<script type="text/javascript" src="assets/js/jquery.let_it_snow.js"></script>
     <script src="assets/js/modernizr.js"></script>
@@ -249,9 +269,9 @@ logHomepageVisit();
     <nav>
         <p class="logo fade-in">
             <?php if (!empty($logoUrl)): ?>
-            <img src="<?php echo htmlspecialchars($logoUrl); ?>" alt="原始大陆图标" style="width:70px; height:auto; border-radius: 8px;">
+            <img src="<?php echo htmlspecialchars($logoUrl); ?>" alt="牧云山庄图标" style="width:70px; height:auto; border-radius: 8px;">
             <?php endif; ?>
-            原始大陆
+            牧云山庄
         </p>
         <ul class="nav-links desktop-nav">
             <li><a href="#home" class="active">首页</a></li>
@@ -281,7 +301,7 @@ logHomepageVisit();
 </header>
 <section class="hero" id="home">
     <div class="hero-content fade-in">
-        <h1>原始大陆</h1>
+        <h1>牧云山庄</h1>
         <p>中国版Java我的世界纯净生存服务器 | 多人协作、公平竞技、无限探索</p>
 
         <div class="server-status glass fade-in delay-1">
@@ -293,7 +313,7 @@ logHomepageVisit();
                 <div class="status-card">
                     <div class="status-text">
                         <img id="motd-icon" class="motd-icon" src="" alt="服务器图标">
-                        <div class="status-title" id="server-name">原始大陆</div>
+                        <div class="status-title" id="server-name">牧云山庄</div>
                         <div class="status-motd" id="server-motd">正在加载服务器信息...</div>
                     </div>
                 </div>
@@ -309,8 +329,8 @@ logHomepageVisit();
                     <div class="status-value" id="server-version">Unknown</div>
                 </div>
                 <div class="status-item glass-dark">
-                    <div class="status-label">最大在线</div>
-                    <div class="status-value" id="max-players">0</div>
+                    <div class="status-label">延时</div>
+                    <div class="status-value" id="max-players">0ms</div>
                 </div>
                 <div class="status-item glass-dark">
                     <div class="status-label">在线进度</div>
@@ -336,7 +356,7 @@ logHomepageVisit();
             <div class="server-switch">
                 <div class="server-switch-btn" id="server-switch-btn">
                     <i class="fas fa-server"></i>
-                    <span id="current-server-name">原始大陆</span>
+                    <span id="current-server-name">牧云山庄</span>
                     <i class="fas fa-chevron-down"></i>
                 </div>
                 <div class="server-switch-menu" id="server-switch-menu">
@@ -419,7 +439,7 @@ logHomepageVisit();
         $joinSettings = $joinResult->fetchArray(SQLITE3_ASSOC);
         ?>
         <h2 class="fade-in"><?php echo htmlspecialchars($joinSettings['title'] ?? '加入我们'); ?></h2>
-        <p class="fade-in delay-1"><?php echo htmlspecialchars($joinSettings['description'] ?? '立即加入原始大陆，开启你的奇幻冒险之旅！'); ?></p>
+        <p class="fade-in delay-1"><?php echo htmlspecialchars($joinSettings['description'] ?? '立即加入牧云山庄，开启你的奇幻冒险之旅！'); ?></p>
     </div>
     <div class="join-content">
         <div class="join-box glass fade-in">
@@ -461,10 +481,10 @@ logHomepageVisit();
 </section>
 <footer class="glass">
     <div class="footer-content">
-        <div class="footer-logo">原始大陆</div>
+        <div class="footer-logo">牧云山庄</div>
         <p>中国版Java版我的世界服务器 | 探索 · 创造 · 社交</p>
         <div class="copyright">
-            © 2025 原始大陆 Minecraft服务器 版权所有 | 设计开发: 原始大陆技术团队
+            © 2025 牧云山庄 Minecraft服务器 版权所有 | 设计开发: 牧云山庄技术团队
         </div>
     </div>
 </footer>
@@ -657,7 +677,7 @@ logHomepageVisit();
                 }
             })
             .catch(error => {
-                console.error('获取服务器特点列表失败:', error);
+                // console.error('获取服务器特点列表失败:', error);
             });
 
 

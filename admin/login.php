@@ -110,6 +110,18 @@ if (isset($_POST['username']) && $securityManager->isAccountLocked($_POST['usern
     }
 }
 
+// 获取favicon URL
+$faviconUrl = '';
+try {
+    $faviconResult = $db->query("SELECT favicon_url FROM site_settings WHERE id = 1 LIMIT 1");
+    if ($faviconResult) {
+        $faviconRow = $faviconResult->fetchArray(SQLITE3_ASSOC);
+        $faviconUrl = $faviconRow ? $faviconRow['favicon_url'] : '';
+    }
+} catch (Exception $e) {
+    $faviconUrl = '';
+}
+
 // 生成CSRF令牌
 $csrfToken = $securityManager->generateCSRFToken();
 
@@ -124,7 +136,10 @@ $message = $_GET['message'] ?? '';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
-    <title>管理登录 - 原始大陆</title>
+    <?php if (!empty($faviconUrl)): ?>
+    <link rel="icon" href="<?php echo htmlspecialchars($faviconUrl); ?>" type="image/x-icon">
+    <?php endif; ?>
+    <title>管理登录 - 牧云山庄</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/admin-styles.css">
     <style>
@@ -283,7 +298,7 @@ $message = $_GET['message'] ?? '';
         </form>
         
         <div class="footer">
-            &copy; 2025 原始大陆管理系统
+            &copy; 2025 牧云山庄管理系统
         </div>
     </div>
 </body>

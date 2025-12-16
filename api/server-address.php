@@ -30,7 +30,7 @@ try {
     $db->exec("CREATE TABLE IF NOT EXISTS server_settings (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         server_address TEXT NOT NULL,
-        server_name TEXT NOT NULL DEFAULT '原始大陆',
+        server_name TEXT NOT NULL DEFAULT '牧云山庄',
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )");
     
@@ -45,7 +45,7 @@ try {
     }
     
     if (!$hasServerNameColumn) {
-        $db->exec("ALTER TABLE server_settings ADD COLUMN server_name TEXT NOT NULL DEFAULT '原始大陆'");
+        $db->exec("ALTER TABLE server_settings ADD COLUMN server_name TEXT NOT NULL DEFAULT '牧云山庄'");
     }
     
     // 检查是否有默认服务器地址
@@ -76,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         // 返回默认服务器地址和名称
         echo json_encode([
             'address' => 'mcda.xin',
-            'name' => '原始大陆'
+            'name' => '牧云山庄'
         ]);
     }
     

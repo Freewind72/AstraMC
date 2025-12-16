@@ -2,7 +2,7 @@
 
 ## 项目概述
 
-AstraMC（原始大陆）是一个基于PHP和SQLite的Minecraft Java版服务器网站系统。该项目提供了完整的前端展示页面和后台管理系统，支持服务器信息发布、资源下载、团队介绍、图片展示等功能。
+AstraMC（牧云山庄）是一个基于PHP和SQLite的Minecraft Java版服务器网站系统。该项目提供了完整的前端展示页面和后台管理系统，支持服务器信息发布、资源下载、团队介绍、图片展示等功能。
 
 ## 技术栈
 
@@ -14,7 +14,7 @@ AstraMC（原始大陆）是一个基于PHP和SQLite的Minecraft Java版服务�
 ## 项目结构
 
 ```
-AstraMC/
+牧云山庄/
 ├── admin/              # 后台管理系统
 ├── api/                # API接口
 ├── assets/             # 静态资源文件
@@ -124,6 +124,47 @@ AstraMC/
 6. 系统日志和监控
 7. IP封禁管理
 8. 安全防护机制
+
+## 使用Docker部署
+
+### 构建和运行
+
+项目已经包含了Docker配置文件，可以通过以下方式快速部署：
+
+1. 构建Docker镜像：
+```bash
+docker build -t astramc .
+```
+
+2. 运行容器：
+```bash
+docker run -d -p 8080:80 --name astramc-container astramc
+```
+
+或者使用docker-compose：
+```bash
+docker-compose up -d
+```
+
+3. 访问应用：
+打开浏览器访问 http://localhost:8080 即可看到网站
+
+### 数据持久化
+
+为了保证数据持久化，推荐使用volume挂载：
+```bash
+docker run -d -p 8080:80 \
+  -v ./sql:/var/www/html/sql \
+  -v ./uploads:/var/www/html/uploads \
+  --name astramc-container astramc
+```
+
+使用docker-compose时，数据卷会自动配置。
+
+### 环境变量
+
+可以通过环境变量调整配置：
+- `APACHE_DOCUMENT_ROOT`: Apache文档根目录
 
 ## 安装和部署
 

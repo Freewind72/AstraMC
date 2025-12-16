@@ -116,7 +116,7 @@ require_once 'install/init_db.php';
     <!-- Resources Section -->
     <section class="resources" id="resources">
         <div class="section-header">
-            <h1 class="fade-in">资源中心</h1>
+            <h2 class="fade-in">资源中心</h2>
             <p class="fade-in delay-1">获取服务器专用资源，优化您的游戏体验</p>
         </div>
         

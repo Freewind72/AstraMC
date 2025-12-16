@@ -27,6 +27,12 @@
                 <span>音乐管理</span>
             </a>
         </li>
+        <li class="menu-item <?php echo basename($_SERVER['PHP_SELF']) === 'deng.php' ? 'active' : ''; ?>">
+            <a href="deng.php">
+                <i class="fas fa-lightbulb"></i>
+                <span>灯笼管理</span>
+            </a>
+        </li>
         <li class="menu-item <?php echo basename($_SERVER['PHP_SELF']) === 'resource.php' ? 'active' : ''; ?>">
             <a href="resource.php">
                 <i class="fas fa-file-download"></i>
@@ -83,7 +89,7 @@
         </li>
     </ul>
     <div class="sidebar-footer">
-        <p>&copy; 2025 原始大陆</p>
+        <p>&copy; 2025 牧云山庄</p>
     </div>
 </nav>
 <div class="sidebar-overlay" id="sidebarOverlay"></div>

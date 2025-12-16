@@ -1,0 +1,7 @@
+User-agent: *
+Disallow:
+
+User-agent: Bingbot
+Disallow:
+
+Sitemap: https://mcysdl.top/sitemap.xml

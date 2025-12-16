@@ -238,6 +238,28 @@ try {
         $stmt->execute();
     }
     
+    // 检查是否需要添加grayscale_mode和auto_grayscale_dates字段到site_settings表
+    $columnsResult = $db->query("PRAGMA table_info(site_settings)");
+    $hasGrayscaleModeColumn = false;
+    $hasAutoGrayscaleDatesColumn = false;
+    
+    while ($column = $columnsResult->fetchArray(SQLITE3_ASSOC)) {
+        if ($column['name'] === 'grayscale_mode') {
+            $hasGrayscaleModeColumn = true;
+        }
+        if ($column['name'] === 'auto_grayscale_dates') {
+            $hasAutoGrayscaleDatesColumn = true;
+        }
+    }
+    
+    if (!$hasGrayscaleModeColumn) {
+        $db->exec("ALTER TABLE site_settings ADD COLUMN grayscale_mode INTEGER DEFAULT 0");
+    }
+    
+    if (!$hasAutoGrayscaleDatesColumn) {
+        $db->exec("ALTER TABLE site_settings ADD COLUMN auto_grayscale_dates TEXT DEFAULT '12-13'");
+    }
+    
     // 获取服务器特点列表供所有页面使用
     $serverFeatures = [];
     $featuresResult = $db->query("SELECT * FROM server_features ORDER BY sort_order ASC, id ASC");
@@ -325,6 +347,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <?php 
+    // 获取favicon URL
+    $faviconUrl = '';
+    try {
+        $faviconResult = $db->query("SELECT favicon_url FROM site_settings WHERE id = 1 LIMIT 1");
+        if ($faviconResult) {
+            $faviconRow = $faviconResult->fetchArray(SQLITE3_ASSOC);
+            $faviconUrl = $faviconRow ? $faviconRow['favicon_url'] : '';
+        }
+    } catch (Exception $e) {
+        $faviconUrl = '';
+    }
+    
+    if (!empty($faviconUrl)): ?>
+    <link rel="icon" href="<?php echo htmlspecialchars($faviconUrl); ?>" type="image/x-icon">
+    <?php endif; ?>
     <title><?php echo PAGE_TITLE; ?></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/admin-styles.css">

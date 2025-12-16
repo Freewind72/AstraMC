@@ -8,13 +8,30 @@ function createDengContainer() {
     const container = document.createElement('div');
     container.className = 'deng-container';
 
-    // 从当前脚本的 URL 获取参数
-    const scriptSrc = document.currentScript.src;
-    const urlParams = new URLSearchParams(scriptSrc.split('?')[1]); // 获取 '?'
-    const customText = urlParams.get('text'); // 获取参数名为'text'的值
-
-    // 将获取的文本分割为字符数组，如果没有提供文本，则使用默认的“新年快乐”
-    const texts = customText ? customText.split('') : ['圣', '诞', '快', '乐'];
+    // 从API获取灯笼文字内容
+    let texts = ['圣', '诞', '快', '乐']; // 默认文字
+    
+    // 异步获取自定义文字和启用状态
+    fetch('/api/deng-text.php')
+        .then(response => response.json())
+        .then(data => {
+            // 检查是否启用灯笼显示
+            if (data.success && data.enabled !== undefined && !data.enabled) {
+                // 如果未启用，则移除灯笼容器
+                document.body.removeChild(container);
+                return;
+            }
+            
+            if (data.success && data.text) {
+                // 使用自定义文字，限制为4个字符
+                texts = Array.from(data.text).slice(0, 4);
+                // 更新灯笼显示
+                updateDengTexts(container, texts);
+            }
+        })
+        .catch(error => {
+            console.error('获取灯笼文字失败:', error);
+        });
 
     texts.forEach((text, index) => {
         const box = document.createElement('div');
@@ -66,6 +83,67 @@ function createDengContainer() {
             box.style.pointerEvents = 'none';
         });
     }
+    
+    // 添加滚动监听以使灯笼跟随顶栏动画
+    window.addEventListener('scroll', function() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        if (scrollTop > 0) {
+            const maxOffset = 15;
+            const offset = Math.min(scrollTop, maxOffset);
+            container.style.transform = `translateY(${-offset}px)`;
+        } else {
+            container.style.transform = 'translateY(0)';
+        }
+    });
+}
+
+// 添加更新灯笼文字的函数
+function updateDengTexts(container, texts) {
+    // 清除现有的灯笼
+    while (container.firstChild) {
+        container.removeChild(container.firstChild);
+    }
+    
+    // 创建新的灯笼
+    texts.forEach((text, index) => {
+        const box = document.createElement('div');
+        box.className = `deng-box deng-box${index + 1}`;
+
+        const deng = document.createElement('div');
+        deng.className = 'deng';
+
+        const xian = document.createElement('div');
+        xian.className = 'xian';
+
+        const dengA = document.createElement('div');
+        dengA.className = 'deng-a';
+
+        const dengB = document.createElement('div');
+        dengB.className = 'deng-b';
+
+        const dengT = document.createElement('div');
+        dengT.className = 'deng-t';
+        dengT.textContent = text;
+
+        dengB.appendChild(dengT);
+        dengA.appendChild(dengB);
+        deng.appendChild(xian);
+        deng.appendChild(dengA);
+
+        const shuiA = document.createElement('div');
+        shuiA.className = 'shui shui-a';
+
+        const shuiC = document.createElement('div');
+        shuiC.className = 'shui-c';
+        const shuiB = document.createElement('div');
+        shuiB.className = 'shui-b';
+
+        shuiA.appendChild(shuiC);
+        shuiA.appendChild(shuiB);
+        deng.appendChild(shuiA);
+        box.appendChild(deng);
+        container.appendChild(box);
+    });
 }
 
 // 添加CSS样式
@@ -81,6 +159,7 @@ function addStyles() {
             height: 100%;
             pointer-events: none;
             z-index: 9999;
+            transition: transform 0.3s ease;
         }
         .deng-box {
             position: fixed;

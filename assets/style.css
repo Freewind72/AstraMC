@@ -52,6 +52,10 @@
             scrollbar-width: none;  /* Firefox 隐藏滚动条 */
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         #video-bg {
             position: fixed;
             top: 0;
@@ -311,7 +315,7 @@
             display: block;
         }
 
-        /* 添加原始大陆图标特定样式 */
+        /* 添加牧云山庄图标特定样式 */
         #server-name {
             font-size: 36px;
             margin-bottom: 10px;
@@ -327,7 +331,7 @@
             }
         }
 
-        /* 修复原始大陆图标尺寸问题 */
+        /* 修复牧云山庄图标尺寸问题 */
         .logo img {
             width: 70px;
             height: auto;
